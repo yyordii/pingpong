@@ -1,0 +1,24 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars */
+}
+
+/* Make the canvas fill the entire page */
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Style the scoreboard */
+#scoreboard {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 24px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+}
