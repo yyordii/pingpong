@@ -148,6 +148,13 @@ class Game {
       this.ball.draw(ctx);
     }
   }
+  resetPositions() {
+    this.obj1.x = window.innerWidth / 2 - 75;
+    this.obj1.y = window.innerHeight / 2 - 25;
+
+    this.obj2.x = window.innerWidth / 2 + 25;
+    this.obj2.y = window.innerHeight / 2 - 25;
+  }
 
   update() {
     // Move the objects
@@ -202,10 +209,12 @@ class Game {
         document.getElementById("score-black").textContent = this.scoreBlack;
       } else if (scorer === "red") {
         this.scoreRed++;
-        document.getElementById("score-red").textContent = this.scoreRed;
+        document.getElementById("score-red").textContent = this.scoreRed; 
       }
+      this.resetPositions();
     }
   }
+  
 
   gameLoop() {
     this.update();
