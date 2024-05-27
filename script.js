@@ -102,21 +102,28 @@ class Ball extends GameObject {
 
 class Game {
   constructor() {
+    let blockWidth = 50;
+    let blockHeight = 50;
+    let blockSpeed = 5;
+    let blockColor1 = "black";
+    let blockColor2 = "red"
+    let blockOffset = 100;
+    
     this.obj1 = new GameObject(
-      window.innerWidth / 2 - 75,
-      window.innerHeight / 2 - 25,
-      50,
-      50,
-      5,
-      "black"
+      blockOffset,
+      window.innerHeight / 2 - blockHeight / 2,
+      blockWidth,
+      blockHeight,
+      blockSpeed,
+      blockColor1
     );
     this.obj2 = new GameObject(
-      window.innerWidth / 2 + 25,
-      window.innerHeight / 2 - 25,
-      50,
-      50,
-      5,
-      "red"
+      window.innerWidth - blockWidth - blockOffset,
+      window.innerHeight / 2 - blockHeight / 2,
+      blockWidth,
+      blockHeight,
+      blockSpeed,
+      blockColor2
     );
     this.ball = new Ball(
       window.innerWidth / 2,
@@ -149,40 +156,33 @@ class Game {
     }
   }
   resetPositions() {
-    this.obj1.x = window.innerWidth / 2 - 75;
-    this.obj1.y = window.innerHeight / 2 - 25;
+    let blockWidth = 50;
+    let blockHeight = 50;
+    let blockOffset = 100;
 
-    this.obj2.x = window.innerWidth / 2 + 25;
-    this.obj2.y = window.innerHeight / 2 - 25;
+    this.obj1.x = blockOffset;
+    this.obj1.y = window.innerHeight / 2 - blockHeight / 2;
+
+    this.obj2.x = window.innerWidth - blockWidth - blockOffset;
+    this.obj2.y = window.innerHeight / 2 - blockHeight / 2;
   }
 
   update() {
     // Move the objects
     if (this.keys["w"]) {
       this.obj1.moveUp();
-    }
-    if (this.keys["a"]) {
-      this.obj1.moveLeft();
-    }
+    } 
     if (this.keys["s"]) {
       this.obj1.moveDown();
     }
-    if (this.keys["d"]) {
-      this.obj1.moveRight();
-    }
-
     if (this.keys["ArrowUp"]) {
       this.obj2.moveUp();
     }
-    if (this.keys["ArrowLeft"]) {
-      this.obj2.moveLeft();
-    }
+    
     if (this.keys["ArrowDown"]) {
       this.obj2.moveDown();
     }
-    if (this.keys["ArrowRight"]) {
-      this.obj2.moveRight();
-    }
+    
 
     // Keep the objects within the screen
     this.obj1.keepWithinScreen();
