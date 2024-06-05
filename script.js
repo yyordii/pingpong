@@ -102,10 +102,10 @@ class Ball extends GameObject {
 
 class Game {
   constructor() {
-    let blockWidth = 50;
-    let blockHeight = 50;
+    let blockWidth = 10;
+    let blockHeight = 130;
     let blockSpeed = 5;
-    let blockColor1 = "black";
+    let blockColor1 = "blue";
     let blockColor2 = "red"
     let blockOffset = 100;
     
@@ -129,9 +129,9 @@ class Game {
       window.innerWidth / 2,
       window.innerHeight / 2,
       10,
-      2,
-      2,
-      "blue"
+      6,
+      6,
+      "white"
     );
     this.keys = {};
     this.gamePaused = true;

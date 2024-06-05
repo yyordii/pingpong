@@ -1,3 +1,12 @@
+body  {
+  display: flex;
+  background-repeat: repeat;
+  background-color: rgb(28, 28, 28);
+}
+
+
+
+
 body,
 html {
   margin: 0;
@@ -16,7 +25,8 @@ html {
 #scoreboard {
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   color: white;
   font-size: 24px;
   background-color: rgba(0, 0, 0, 0.5);
