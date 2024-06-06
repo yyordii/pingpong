@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "fireworks-js": "^2.10.7"
+  },
+  "scripts": {
+    "watch": "parcel index.html --open"
+  }
+}
+

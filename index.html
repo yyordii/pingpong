@@ -5,19 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-   
   </head>
-  
+
   <body>
     <img src="./ooorganize.svg" alt="logo" class="logo" />
     <img src="./ooorganize.svg" alt="logo" class="logo" />
 
-    
     <div id="scoreboard">
-      Blue: <span id="score-black">0</span> Red: <span id="score-red">0</span>
+      <div id="timer">60</div>
+      Blue: <span id="score-blue">0</span> Red: <span id="score-red">0</span>
     </div>
-    
+    <div id="winner"></div>
+
     <canvas id="canvas"></canvas>
   </body>
-  <script src="script.js"></script>
+
+  <script type="module" src="script.js"></script>
 </html>

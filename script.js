@@ -1,3 +1,5 @@
+import { Fireworks } from 'fireworks-js'
+
 class GameObject {
   constructor(x, y, width, height, speed, color) {
     this.x = x;
@@ -6,6 +8,17 @@ class GameObject {
     this.height = height;
     this.speed = speed;
     this.color = color;
+  }
+
+  aiFollow(ball) {
+    // If the ball is above the paddle, move up
+    if (ball.y < this.y) {
+      this.moveUp();
+    }
+    // If the ball is below the paddle, move down
+    else if (ball.y > this.y + this.height) {
+      this.moveDown();
+    }
   }
 
   bounceOffObject(obj) {
@@ -74,6 +87,7 @@ class Ball extends GameObject {
     this.radius = radius;
     this.speedX = speedX;
     this.speedY = speedY;
+    this.isVisible = true;
   }
 
   draw(ctx) {
@@ -107,7 +121,7 @@ class Ball extends GameObject {
       this.speedX = -Math.abs(this.speed);
       this.speedY = (Math.random() < 0.5 ? -1 : 1) * this.speed;
 
-      return "black";
+      return this.isVisible ? "blue" : false; // Modify this line
     }
     if (this.x - this.radius < 0) {
       this.x = window.innerWidth / 2;
@@ -117,11 +131,13 @@ class Ball extends GameObject {
       this.speedX = Math.abs(this.speed);
       this.speedY = (Math.random() < 0.5 ? -1 : 1) * this.speed;
 
-      return "red";
+      return this.isVisible ? "red" : false; // Modify this line
     }
     return false;
   }
 }
+
+
 
 class Game {
   constructor() {
@@ -131,6 +147,10 @@ class Game {
     let blockColor1 = "blue";
     let blockColor2 = "red";
     let blockOffset = 100;
+
+    this.mode = 'ai';
+    this.gamePaused = true;
+    this.timerInterval = null;
 
     this.obj1 = new GameObject(
       blockOffset,
@@ -156,24 +176,28 @@ class Game {
     );
     this.keys = {};
     this.gamePaused = true;
-    this.scoreBlack = 0;
+    this.scoreBlue = 0;
     this.scoreRed = 0;
+
+    this.timer = 60;
   }
 
   draw() {
     var canvas = document.getElementById("canvas");
     if (canvas.getContext) {
       var ctx = canvas.getContext("2d");
-
+  
       // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  
       // Draw the objects
       this.obj1.draw(ctx);
       this.obj2.draw(ctx);
-
-      // Draw the ball
-      this.ball.draw(ctx);
+  
+      // Draw the ball only if the game is not over
+      if (this.timer > 0) {
+        this.ball.draw(ctx);
+      }
     }
   }
 
@@ -197,18 +221,29 @@ class Game {
 
   update() {
     // Move the objects
-    if (this.keys["w"]) {
+       if (this.keys["w"]) {
       this.obj1.moveUp();
     }
     if (this.keys["s"]) {
       this.obj1.moveDown();
     }
-    if (this.keys["ArrowUp"]) {
-      this.obj2.moveUp();
+
+    // Check the mode
+    if (this.mode === 'ai') {
+      // AI follows the ball
+      this.obj2.aiFollow(this.ball);
+    } else if (this.mode === 'duo') {
+      // Move the second object according to the arrow keys
+      if (this.keys["ArrowUp"]) {
+        this.obj2.moveUp();
+      }
+      if (this.keys["ArrowDown"]) {
+        this.obj2.moveDown();
+      }
     }
-    if (this.keys["ArrowDown"]) {
-      this.obj2.moveDown();
-    }
+
+    // AI follows the ball
+    this.obj2.aiFollow(this.ball);
 
     // Keep the objects within the screen
     this.obj1.keepWithinScreen();
@@ -228,11 +263,12 @@ class Game {
 
     // Reset the ball if it hits the left or right wall
     let scorer = this.ball.resetIfHitsWall();
-    if (scorer) {
+    if (scorer && this.timer > 0) { // Add condition to check if timer is greater than 0
       this.gamePaused = true;
-      if (scorer === "black") {
-        this.scoreBlack++;
-        document.getElementById("score-black").textContent = this.scoreBlack;
+      this.pauseTimer(); // Pause the timer when a goal is scored
+      if (scorer === "blue") {
+        this.scoreBlue++;
+        document.getElementById("score-blue").textContent = this.scoreBlue;
       } else if (scorer === "red") {
         this.scoreRed++;
         document.getElementById("score-red").textContent = this.scoreRed;
@@ -240,6 +276,7 @@ class Game {
       this.resetPositions();
     }
   }
+
 
   gameLoop() {
     this.update();
@@ -269,7 +306,14 @@ class Game {
       this.keys[event.key] = true;
 
       if (event.key === " ") {
-        this.gamePaused = false;
+        // Toggle the game's paused state
+        this.gamePaused = !this.gamePaused;
+
+        if (this.gamePaused) {
+          this.pauseTimer(); // Pause the timer when the game is paused
+        } else {
+          this.startTimer(); // Start the timer when the game starts
+        }
       }
 
       // Prevent default behavior of arrow keys
@@ -281,6 +325,53 @@ class Game {
     window.addEventListener("keyup", (event) => {
       this.keys[event.key] = false;
     });
+  }
+
+  showFireworks() {
+    let container = document.getElementById('canvas');
+    let fireworks = new Fireworks(container, {
+      maxRockets: 50,            // max # of rockets to spawn
+      rocketSpawnInterval: 150, // millisends to check if new rockets should spawn
+      numParticles: 100,        // number of particles to spawn when rocket explodes (+0-10)
+      explosionMinHeight: 20,   // minimum height for random explode
+      explosionMaxHeight: 200,  // maximum height for random explode
+      explosionChance: 0.08     // chance in each tick the rocket will explode
+    });
+    fireworks.start();
+  }
+
+  startTimer() {
+    // Only start the timer if it's not already running
+    if (!this.timerInterval) {
+      // Get the timer element
+      const timerElement = document.getElementById("timer");
+
+      // Decrease the timer by one every second
+      this.timerInterval = setInterval(() => {
+        if (this.timer > 0) { // Add condition to check if timer is greater than 0
+          this.timer--;
+
+          // Update the timer element
+          timerElement.textContent = this.timer;
+
+          // When the timer reaches zero, stop the timer and show the winner
+          if (this.timer === 0) {
+            clearInterval(this.timerInterval);
+            let winner = this.scoreBlue > this.scoreRed ? 'blue' : 'Red';
+            let winnerElement = document.getElementById('winner');
+            winnerElement.textContent = `The winner is ${winner}`;
+            winnerElement.style.color = winner === 'blue' ? 'blue' : 'red';
+            winnerElement.classList.add('animate-winner'); // Add the animation class
+            this.showFireworks(); // Show fireworks when the game ends
+          }
+        }
+      }, 1000);
+    }
+  }
+  pauseTimer() {
+    // Clear the interval to pause the timer
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
   }
 }
 
