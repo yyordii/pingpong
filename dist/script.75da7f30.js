@@ -604,15 +604,21 @@ var GameObject = /*#__PURE__*/function () {
     this.height = height;
     this.speed = speed;
     this.color = color;
+    this.frameCount = 0;
   }
   return _createClass(GameObject, [{
     key: "aiFollow",
     value: function aiFollow(ball) {
-      if (ball.y < this.y) {
-        this.moveUp();
-      } else if (ball.y > this.y + this.height) {
-        this.moveDown();
+      // Only update the AI's position every 5 frames
+      if (this.frameCount % 1 === 0) {
+        // Move the paddle towards the current position of the ball
+        if (ball.y < this.y) {
+          this.moveUp();
+        } else if (ball.y > this.y + this.height) {
+          this.moveDown();
+        }
       }
+      this.frameCount++;
     }
   }, {
     key: "draw",
@@ -750,7 +756,10 @@ var Game = /*#__PURE__*/function () {
         if (this.keys['ArrowUp']) this.obj2.moveUp();
         if (this.keys['ArrowDown']) this.obj2.moveDown();
       } else {
-        this.obj2.aiFollow(this.ball);
+        // Only move the AI when the game is not paused
+        if (!this.gamePaused) {
+          this.obj2.aiFollow(this.ball);
+        }
       }
       this.obj1.keepWithinScreen();
       this.obj2.keepWithinScreen();
@@ -859,6 +868,11 @@ var Game = /*#__PURE__*/function () {
               winnerElement.style.color = winner;
               winnerElement.classList.add('animate-winner');
               _this3.showFireworks();
+
+              // Refresh the page 10 seconds after the game ends
+              setTimeout(function () {
+                location.reload();
+              }, 10000);
             }
           }
         }, 1000);
@@ -898,7 +912,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54163" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50361" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

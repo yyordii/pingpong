@@ -8,14 +8,22 @@ class GameObject {
     this.height = height;
     this.speed = speed;
     this.color = color;
+    this.frameCount = 0; 
+  
   }
 
   aiFollow(ball) {
-    if (ball.y < this.y) {
-      this.moveUp();
-    } else if (ball.y > this.y + this.height) {
-      this.moveDown();
+    // Only update the AI's position every 5 frames
+    if (this.frameCount % 1 === 0) {
+      // Move the paddle towards the current position of the ball
+      if (ball.y < this.y) {
+        this.moveUp();
+      } else if (ball.y > this.y + this.height) {
+        this.moveDown();
+      }
     }
+  
+    this.frameCount++;
   }
 
   draw(ctx) {
@@ -136,7 +144,10 @@ class Game {
       if (this.keys['ArrowUp']) this.obj2.moveUp();
       if (this.keys['ArrowDown']) this.obj2.moveDown();
     } else {
-      this.obj2.aiFollow(this.ball);
+      // Only move the AI when the game is not paused
+      if (!this.gamePaused) {
+        this.obj2.aiFollow(this.ball);
+      }
     }
     this.obj1.keepWithinScreen();
     this.obj2.keepWithinScreen();
@@ -233,6 +244,11 @@ class Game {
             winnerElement.style.color = winner;
             winnerElement.classList.add('animate-winner');
             this.showFireworks();
+  
+            // Refresh the page 10 seconds after the game ends
+            setTimeout(function() {
+              location.reload();
+            }, 10000);
           }
         }
       }, 1000);
