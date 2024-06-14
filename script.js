@@ -26,6 +26,8 @@ class GameObject {
     this.frameCount++;
   }
 
+
+  // Method to draw the game objects
   draw(ctx) {
     ctx.fillStyle = this.color;
     ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -48,6 +50,8 @@ class GameObject {
     if (this.y + this.height > window.innerHeight) this.y = window.innerHeight - this.height;
   }
 }
+
+
 
 class Ball extends GameObject {
   constructor(x, y, radius, color) {
@@ -113,6 +117,8 @@ class Ball extends GameObject {
   }
 }
 
+
+
 class Game {
   constructor() {
     const blockParams = { width: 10, height: 130, speed: 5, offset: 100 };
@@ -137,6 +143,8 @@ class Game {
     if (this.timer > 0) this.ball.draw(ctx);
   }
 
+
+  
   update() {
     if (this.keys['w']) this.obj1.moveUp();
     if (this.keys['s']) this.obj1.moveDown();
@@ -238,10 +246,17 @@ class Game {
           timerElement.textContent = this.timer;
           if (this.timer === 0) {
             clearInterval(this.timerInterval);
-            const winner = this.scoreBlue > this.scoreRed ? 'blue' : 'red';
             const winnerElement = document.getElementById('winner');
-            winnerElement.textContent = `The winner is ${winner}`;
-            winnerElement.style.color = winner;
+            if (this.scoreBlue > this.scoreRed) {
+              winnerElement.textContent = `The winner is blue`;
+              winnerElement.style.color = 'blue';
+            } else if (this.scoreBlue < this.scoreRed) {
+              winnerElement.textContent = `The winner is red`;
+              winnerElement.style.color = 'red';
+            } else {
+              winnerElement.textContent = `It's a draw`;
+              winnerElement.style.color = 'black';
+            }
             winnerElement.classList.add('animate-winner');
             this.showFireworks();
   
