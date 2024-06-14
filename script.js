@@ -1,4 +1,4 @@
-import { Fireworks } from 'fireworks-js';
+import { Fireworks } from './node_modules/fireworks-js/dist/index.es.js'
 
 class GameObject {
   constructor(x, y, width, height, speed, color) {
@@ -117,7 +117,8 @@ class Ball extends GameObject {
   }
 }
 
-
+let spaceToStart = document.getElementById('space-to-start');
+let hasModeBeenChosen = false;
 
 class Game {
   constructor() {
@@ -180,6 +181,13 @@ class Game {
     }
   }
 
+setAi() {
+  this.mode = 'ai';
+}
+setDuo() {
+  this.mode = 'duo';
+}
+
   gameLoop() {
     this.update();
     this.draw();
@@ -193,6 +201,11 @@ class Game {
     this.obj2.x = window.innerWidth - blockParams.width - blockParams.offset;
     this.obj2.y = (window.innerHeight - blockParams.height) / 2;
     this.ball.resetBallDirection(true);
+    if(!this.gamePaused || !hasModeBeenChosen){
+      spaceToStart.style.display = 'none';
+    }else{
+      spaceToStart.style.display = 'block';
+    }
   }
 
   adjustCanvasSize() {
@@ -206,6 +219,7 @@ class Game {
     window.addEventListener('resize', this.adjustCanvasSize.bind(this));
     this.gameLoop();
     window.addEventListener('keydown', (event) => {
+      
       this.keys[event.key] = true;
       if (event.key === ' ') {
         this.gamePaused = !this.gamePaused;
@@ -213,6 +227,11 @@ class Game {
           this.pauseTimer();
         } else {
           this.startTimer();
+        }
+        if(!this.gamePaused || !hasModeBeenChosen){
+          spaceToStart.style.display = 'none';
+        }else{
+          spaceToStart.style.display = 'block';
         }
       }
       if (['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key)) {
@@ -248,9 +267,11 @@ class Game {
             clearInterval(this.timerInterval);
             const winnerElement = document.getElementById('winner');
             if (this.scoreBlue > this.scoreRed) {
+              winnerElement.style.display = 'block';
               winnerElement.textContent = `The winner is blue`;
               winnerElement.style.color = 'blue';
             } else if (this.scoreBlue < this.scoreRed) {
+              winnerElement.style.display = 'block';
               winnerElement.textContent = `The winner is red`;
               winnerElement.style.color = 'red';
             } else {
@@ -277,4 +298,32 @@ class Game {
 }
 
 // Start the game
-new Game().start();
+let spel = new Game();
+
+let setDuo = document.getElementById('set_duo');
+let setAi = document.getElementById('set_ai');
+let startBtn = document.getElementById('start_btn');
+
+let selected_text = document.getElementById('selected-text');
+
+startBtn.addEventListener('click', function() {
+  console.log('start');
+  spel.start();
+  startBtn.style.display = 'none';
+  setAi.style.display = 'none';
+  setDuo.style.display = 'none';
+  spaceToStart.style.display = 'block';
+  hasModeBeenChosen = true;
+});
+
+setDuo.addEventListener('click', function() {
+  console.log('duo');
+  spel.setDuo();
+  selected_text.innerHTML = 'Selected: Duo';
+});
+
+setAi.addEventListener('click', function() {
+  console.log('ai');
+  spel.setAi();
+  selected_text.innerHTML = 'Selected: AI';
+});

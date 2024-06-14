@@ -4,6 +4,8 @@
   },
   "scripts": {
     "watch": "parcel index.html --open"
+  },
+  "devDependencies": {
+    "parcel": "^2.12.0"
   }
 }
-

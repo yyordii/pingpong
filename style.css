@@ -8,7 +8,9 @@ body  {
   padding: 0;
 }
 
-
+*{
+  font-family: 'Courier New', Courier, monospace;
+}
 
 
 
@@ -28,14 +30,34 @@ html {
 
 /* Style the scoreboard */
 #scoreboard {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   top: 10px;
   left: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.292);
+  border-radius: 10px;
   transform: translateX(-50%);
   color: white;
   font-size: 24px;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
+  z-index: 999999999;
+}
+#scoreboard button {
+  margin-bottom: 5px;
+  color: white;
+  padding: 4px;
+  background-color: rgba(0, 0, 0, 0.219);
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+#scoreboard button:hover {
+  background-color: rgba(0, 0, 0, 0.864);
+}
+#scoreboard button:last-child:hover {
+  border: 1px solid rgb(116, 255, 227);
 }
 #timer {
   font-size: 2em; /* Increase the font size */
@@ -55,6 +77,10 @@ html {
   transform: translate(-50%, -50%);
   font-size: 50px;
   text-align: center;
+  padding: 10px;
+  display: none;
+  border-radius: 10px;
+  background-color: rgba(240, 248, 255, 0.262);
 }
 
 .animate-winner {

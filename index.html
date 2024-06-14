@@ -13,12 +13,20 @@
 
     <div id="scoreboard">
       <div id="timer">60</div>
-      Blue: <span id="score-blue">0</span> Red: <span id="score-red">0</span>
+      <div>
+        Blue: <span id="score-blue">0</span> Red: <span id="score-red">0</span>
+      </div>
+      <sub id="selected-text">Selected: AI</sub>
+      <button id="set_duo">Duo</button>
+      <button id="set_ai">AI</button>
+      <button id="start_btn">Select</button>
+      <p id="space-to-start" style="font-size: 14px; display: none;">Space to start</p>
     </div>
     <div id="winner"></div>
 
     <canvas id="canvas"></canvas>
   </body>
 
-  <script type="module" src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2.x/dist/index.umd.js"></script>
+  <script type="module" src="script.js" defer></script>
 </html>
