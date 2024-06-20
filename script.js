@@ -275,6 +275,7 @@ setDuo() {
               winnerElement.textContent = `The winner is red`;
               winnerElement.style.color = 'red';
             } else {
+              winnerElement.style.display = 'block';
               winnerElement.textContent = `It's a draw`;
               winnerElement.style.color = 'black';
             }
