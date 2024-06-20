@@ -13,7 +13,7 @@ class GameObject {
   }
 
   aiFollow(ball) {
-    // Only update the AI's position every 5 frames
+    // Alleen bal updated als 5 frames zijn gebeurt.
     if (this.frameCount % 1 === 0) {
       // Move the paddle towards the current position of the ball
       if (ball.y < this.y) {
